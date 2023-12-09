@@ -2,7 +2,7 @@
 /*
 Plugin Name: Indicadores Económicos Chile
 Description: Plugin Wordpress con indicadores económicos actualizados en Chile.
-Version: 1.1
+Version: 1.2
 */
 global $indicadores_data;
 
@@ -27,14 +27,14 @@ function obtener_datos_mindicador_api() {
             global $indicadores_data;
             // Almacenar los valores en las variables globales
             $indicadores_data = array(
-                'uf' => $data->uf->valor,
-                'ivp' => $data->ivp->valor,
-                'dolar' => $data->dolar->valor,
-                'dolar intercambio' => $data->dolar_intercambio->valor,
-                'euro' => $data->euro->valor,
-                'ipc' => $data->ipc->valor,
-                'imacec' => $data->imacec->valor,
-                'tpm' => $data->tpm->valor
+                'uf' => $data->uf,
+                'ivp' => $data->ivp,
+                'dolar' => $data->dolar,
+                'dolar intercambio' => $data->dolar_intercambio,
+                'euro' => $data->euro,
+                'ipc' => $data->ipc,
+                'imacec' => $data->imacec,
+                'tpm' => $data->tpm
             );
 
             return "Datos de la API almacenados correctamente.";
@@ -46,23 +46,56 @@ function obtener_datos_mindicador_api() {
 
 //! Función para el shortcode que mostrará los indicadores según el parámetro recibido
 function mostrar_indicador($atts) {
-    // Actualizar los datos de la API antes de mostrar el indicador solicitado
+    // Actualizar los datos de la API antes de mostrar el divisa solicitado
     obtener_datos_mindicador_api();
     
     global $indicadores_data;
+    $fmt = numfmt_create('es_CL', NumberFormatter::CURRENCY);
+    $value_temp;
 
     // Obtener el parámetro del shortcode
     $atts = shortcode_atts(array(
-        'indicador' => '', // Parámetro para indicar el indicador a mostrar
+        'divisa' => '',
+        'nombre' => false,
+        'class' => '',
+        'id' => '',
     ), $atts);
 
-    // Verificar si se proporcionó un indicador válido y existe en los datos almacenados
-    if (!empty($atts['indicador']) && isset($indicadores_data[$atts['indicador']])) {
-        $converter_value = number_format($indicadores_data[$atts['indicador']], 0, ',', '.')
-        // Devolver el valor del indicador solicitado
-        return $converter_value;
+    // Verificar si se proporcionó un divisa válido y existe en los datos almacenados
+    if (!empty($atts['divisa']) && isset($indicadores_data[$atts['divisa']])) {
+        // Verificar si los datos de la API están disponibles y el valor no es nulo
+        if ($indicadores_data !== null) {
+            //Comprobamos valores con porcentaje
+            if($atts['divisa'] === 'ipc' || $atts['divisa'] === 'imacec' || $atts['divisa'] === 'tpm'){
+                $converted_value = $indicadores_data[$atts['divisa']]->valor . '%';
+            }else{
+                $value_temp = $indicadores_data[$atts['divisa']]->valor;
+                $converted_value = numfmt_format_currency($fmt, $value_temp, 'CLP');
+            }
+            // Construir el elemento del párrafo con clase y ID
+            $output = '<p';            
+            if (!empty($atts['class'])) {
+                $output .= ' class="' . esc_attr($atts['class']) . '"';
+            }
+            if (!empty($atts['id'])) {
+                $output .= ' id="' . esc_attr($atts['id']) . '"';
+            }
+            $output .= '>';
+            if($atts['nombre']){
+                $output .= '<span><b>'.$indicadores_data[$atts['divisa']]->nombre.': '.'</b>'. $converted_value .'</span>';
+            }else{
+                $output .= $converted_value;
+            }
+            $output .= '</p>';
+            
+
+            // Devolver el valor del divisa solicitado dentro del elemento con clase e ID
+            return $output;
+        } else {
+            return "No se pudo obtener datos de la API.";
+        }
     } else {
-        return "Indicador no válido o no encontrado.";
+        return "divisa no válido o no encontrado.";
     }
 }
 
@@ -84,8 +117,19 @@ function agregar_pagina_herramientas() {
 // Función que mostrará el contenido de la página
 function indicadores_pagina() {
     echo '<div class="wrap">';
-    echo '<h1>Hola Mundo Plugin</h1>';
-    echo '<p>Esta es la página de configuración del plugin "Hola Mundo".</p>';
+    echo '<h1>Indicadores Económicos Chile</h1>';
+    echo '<p>Este plugin te permite obtener fácilmente los indicadores económicos más utilizados en Chile.</p>';
+    echo '<h2>Instrucciones de uso del shortcode [indicadores]</h2>';
+    echo '<p>El shortcode [indicadores] acepta los siguientes parámetros:</p>';
+    echo '<ul>';
+    echo '<li><strong>divisa</strong>: Parámetro para indicar la divisa a mostrar. Los valores aceptados son: uf, ivp, dolar, euro, ipc, imacec, tpm, dolar intercambio.</li>';
+    echo '<li><strong>nombre</strong>: Opcional. Si es true, mostrará el nombre de la divisa junto con su valor. Se agrega una etiqueta span que contiene el nombre de la divisa.</li>';
+    echo '<li><strong>class</strong>: Opcional. Define una clase CSS para el elemento generado por el shortcode.</li>';
+    echo '<li><strong>id</strong>: Opcional. Define un identificador único para el elemento generado por el shortcode.</li>';
+    echo '</ul>';
+    echo '<h2>¡Apoya mi trabajo!</h2>';
+    echo '<p>Puedes apoyarme comprándome un café en <a href="https://ko-fi.com/mushroom47" target="_blank" rel="noopener noreferrer">Kofi</a>.</p>';
+    echo '<p><a href="https://hectorvaldesm.com/" target="_blank" rel="noopener noreferrer">Developed by 🍄</a></p>';
     echo '</div>';
 }
 
