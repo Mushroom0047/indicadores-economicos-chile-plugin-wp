@@ -1,8 +1,10 @@
 <?php
 /*
 Plugin Name: Indicadores Económicos Chile
-Description: Plugin Wordpress con indicadores económicos actualizados en Chile.
-Version: 1.1
+Description: Muestra mediante un shortcode los Indicadores económicos actualizados en Chile.
+Version: 1.0.0
+Author: by Mushroom Dev 🍄
+Author URI: https://hectorvaldesm.com/
 */
 global $indicadores_data;
 
@@ -125,7 +127,7 @@ function indicadores_pagina() {
     } 
     echo '<div class="wrap">';
     echo '<h1>Indicadores Económicos Chile</h1>';
-    echo '<p>Este plugin te permite obtener fácilmente los indicadores económicos más utilizados en Chile.</p>';
+    echo '<p>Este plugin te permite obtener fácilmente mediante shortcode los indicadores económicos más utilizados en Chile.</p>';
     echo '<h2>Instrucciones de uso del shortcode [indicadores]</h2>';
     echo '<p>El shortcode [indicadores] acepta los siguientes parámetros:</p>';
     echo '<ul>';
@@ -136,10 +138,14 @@ function indicadores_pagina() {
     echo '</ul>';
     echo '<h2>¡Apoya mi trabajo!</h2>';
     echo '<p>Puedes apoyarme comprándome un café en <a href="https://ko-fi.com/mushroom47" target="_blank" rel="noopener noreferrer">Kofi</a>.</p>';
-    echo '<p><a href="https://hectorvaldesm.com/" target="_blank" rel="noopener noreferrer">Developed by 🍄</a></p>';
+    echo '<p><a href="https://hectorvaldesm.com/" target="_blank" rel="noopener noreferrer">Developed by Mushroom Dev 🍄</a></p>';
+    
+    // Disclaimer y versión del plugin
+    echo '<p>Los datos son obtenidos diariamente de la API REST <a href="https://mindicador.cl/" target="_blank" rel="noopener noreferrer">mindicador.cl</a>.</p>';
+    echo '<p>Versión del plugin: 1.0.0</p>';
+    
     echo '</div>';
 }
-
 
 // Acción para añadir la página al menú de Herramientas
 add_action('admin_menu', 'agregar_pagina_herramientas');
