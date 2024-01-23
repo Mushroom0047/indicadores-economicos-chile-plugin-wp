@@ -52,9 +52,9 @@ uf, ivp, dolar, euro, ipc, imacec, tpm, dolar intercambio.
 
 == Screenshots ==
 
-![Página de detalles del plugin, ubicada en Herramientas>Indicadores](screenshots/screenshot_plugin_ind_eco_chile_1.png)
-![Ejemplo de Shortcode usando Gutenberg](screenshots/screenshot_plugin_ind_eco_chile_2.png)
-![Vista de cómo quedaría en el sitio los indicadores](screenshots/screenshot_plugin_ind_eco_chile_3.png)
+![Página de detalles del plugin, ubicada en Herramientas>Indicadores](screenshots/screenshot_plugin_ind_eco_chile(1).png)
+![Ejemplo de Shortcode usando Gutenberg](screenshots/screenshot_plugin_ind_eco_chile(2).png)
+![Vista de cómo quedaría en el sitio los indicadores](screenshots/screenshot_plugin_ind_eco_chile(3).png)
 
 
 == Other Notes ==
