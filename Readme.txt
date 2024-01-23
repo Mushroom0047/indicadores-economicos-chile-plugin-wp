@@ -1,6 +1,6 @@
 === Indicadores Económicos Chile ===
-Contributors: TuNombre
-Tags: indicadores, Chile, economía
+Contributors:
+Tags: indicadores, Chile, economía, uf, dolar, ipc
 Requires at least: 4.0
 Tested up to: 5.9
 Stable tag: 1.0.0
@@ -52,7 +52,9 @@ uf, ivp, dolar, euro, ipc, imacec, tpm, dolar intercambio.
 
 == Screenshots ==
  
-1. Captura de pantalla de los indicadores económicos en acción.
+![Página de detalles del plugin, ubicada en Herramientas>Indicadores](screenshots/screenshot plugin ind eco chile (1))
+![Ejemplo de Shortcode usando Gutenberg](screenshots/screenshot plugin ind eco chile (2))
+![Vista de como quedaría en el sitio los indicadores](screenshots/screenshot plugin ind eco chile (3))
 
 == Other Notes ==
  
