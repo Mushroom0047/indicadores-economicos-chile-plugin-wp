@@ -51,10 +51,11 @@ uf, ivp, dolar, euro, ipc, imacec, tpm, dolar intercambio.
 ¡Nueva versión del plugin "Indicadores Económicos Chile"! ¡Disfruta de los indicadores económicos actualizados en tu sitio web!
 
 == Screenshots ==
- 
-![Página de detalles del plugin, ubicada en Herramientas>Indicadores](screenshots/screenshot plugin ind eco chile (1))
-![Ejemplo de Shortcode usando Gutenberg](screenshots/screenshot plugin ind eco chile (2))
-![Vista de como quedaría en el sitio los indicadores](screenshots/screenshot plugin ind eco chile (3))
+
+![Página de detalles del plugin, ubicada en Herramientas>Indicadores](screenshots/screenshot_plugin_ind_eco_chile_1.png)
+![Ejemplo de Shortcode usando Gutenberg](screenshots/screenshot_plugin_ind_eco_chile_2.png)
+![Vista de cómo quedaría en el sitio los indicadores](screenshots/screenshot_plugin_ind_eco_chile_3.png)
+
 
 == Other Notes ==
  
