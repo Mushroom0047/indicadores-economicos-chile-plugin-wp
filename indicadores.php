@@ -128,7 +128,7 @@ function indicadores_pagina() {
     echo '<div class="wrap">';
     echo '<h1>Indicadores Económicos Chile</h1>';
     echo '<p>Este plugin te permite obtener fácilmente mediante shortcode los indicadores económicos más utilizados en Chile.</p>';
-    echo '<h2>Instrucciones de uso del shortcode [indicadores]</h2>';
+    echo '<h2>Instrucciones de uso del shortcode <b></b>[indicadores]</b></h2>';
     echo '<p>El shortcode [indicadores] acepta los siguientes parámetros:</p>';
     echo '<ul>';
     echo '<li><strong>divisa</strong>: Parámetro para indicar la divisa a mostrar. Los valores aceptados son: uf, ivp, dolar, euro, ipc, imacec, tpm, dolar intercambio.</li>';
