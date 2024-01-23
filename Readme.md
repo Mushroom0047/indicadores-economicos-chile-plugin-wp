@@ -1,5 +1,6 @@
 === Indicadores Económicos Chile ===
 Contributors:
+Donate link: hhttps://ko-fi.com/mushroom47
 Tags: indicadores, Chile, economía, uf, dolar, ipc
 Requires at least: 4.0
 Tested up to: 5.9
@@ -64,3 +65,11 @@ uf, ivp, dolar, euro, ipc, imacec, tpm, dolar intercambio.
 == License ==
 
 Este plugin está licenciado bajo GPL-2.0+.
+
+## Política de Privacidad
+
+Este plugin utiliza la API de [Mindicador.cl](https://www.mindicador.cl/api) para obtener datos económicos de Chile. Te recomendamos revisar la política de privacidad de Mindicador.cl para comprender cómo se manejan los datos.
+
+**Enlace a la Política de Privacidad:** [Política de Privacidad](https://indicadores-economicos-chile.netlify.app/#/privacy-policy)
+
+Asegúrate de revisar y cumplir con las políticas de privacidad tanto de tu propio servicio como del servicio de terceros que estás utilizando en tu plugin. Esto ayuda a proporcionar a los usuarios la información necesaria sobre cómo se manejan los datos y contribuye a la transparencia en el uso del plugin.
