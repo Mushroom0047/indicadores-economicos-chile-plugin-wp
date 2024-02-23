@@ -1,42 +1,55 @@
 <?php
 /*
-Plugin Name: Indicadores Económicos Chile
-Description: Muestra mediante un shortcode los Indicadores económicos actualizados en Chile.
-Version: 1.0.0
-Author: by Mushroom Dev 🍄
-Author URI: https://hectorvaldesm.com/
+*Plugin Name: Indicadores Económicos Chile
+*Plugin URI: https://github.com/Mushroom0047/indicadores-economicos-chile-plugin-wp
+*Description: Muestra mediante un shortcode los Indicadores económicos actualizados en Chile.
+*Version: 1.0.0
+*Author: Mushroom Dev 🍄
+*Author URI: https://hectorvaldes.dev/
+*Donate link: https://ko-fi.com/mushroom47
+*Tags: indicadores, Chile, economía, uf, dolar, ipc
+*Requires at least: 4.0
+*Tested up to: 6.4
+*Stable tag: 1.0.0
+*License: GPLv2
+*License URI: https://www.gnu.org/licenses/gpl-2.0.html
+*Text Domain: indicadores-economicos-chile
 */
-global $indicadores_data;
+if ( ! defined( 'ABSPATH' ) ) exit; // Salir si se accede directamente
+
+global $iec_indicadores_data;
 
 //! Función para obtener los datos de la API de mindicador.cl
-function obtener_datos_mindicador_api() {
-    $api_url = 'https://www.mindicador.cl/api';
+function iec_obtener_datos_mindicador_api() {
+    $iec_api_url = 'https://www.mindicador.cl/api';
 
     // Realizar la solicitud GET a la API
-    $response = wp_remote_get($api_url);
+    $iec_response = wp_remote_get($iec_api_url);
 
     // Verificar si la solicitud fue exitosa
-    if (is_wp_error($response)) {
-        // En caso de error al hacer la solicitud
-        return "Error al obtener datos de la API: " . $response->get_error_message();
+    if (is_wp_error($iec_response)) {
+        // En caso de error al hacer la solicitud, registrar el error en el log
+        error_log("Error al obtener datos de la API: " . $iec_response->get_error_message());
+        // Informar al usuario de manera más específica sobre el problema
+        return "Error al obtener datos de la API. Por favor, inténtalo de nuevo más tarde.";
     } else {
         // Si la solicitud fue exitosa, obtener y decodificar los datos JSON
-        $body = wp_remote_retrieve_body($response);
-        $data = json_decode($body);
+        $iec_body = wp_remote_retrieve_body($iec_response);
+        $iec_data = json_decode($iec_body);
 
          // Verificar si se obtuvieron datos válidos
-         if ($data) {
-            global $indicadores_data;
+         if ($iec_data) {
+            global $iec_indicadores_data;
             // Almacenar los valores en las variables globales
-            $indicadores_data = array(
-                'uf' => $data->uf,
-                'ivp' => $data->ivp,
-                'dolar' => $data->dolar,
-                'dolar intercambio' => $data->dolar_intercambio,
-                'euro' => $data->euro,
-                'ipc' => $data->ipc,
-                'imacec' => $data->imacec,
-                'tpm' => $data->tpm
+            $iec_indicadores_data = array(
+                'uf' => $iec_data->uf,
+                'ivp' => $iec_data->ivp,
+                'dolar' => $iec_data->dolar,
+                'dolar intercambio' => $iec_data->dolar_intercambio,
+                'euro' => $iec_data->euro,
+                'ipc' => $iec_data->ipc,
+                'imacec' => $iec_data->imacec,
+                'tpm' => $iec_data->tpm
             );
 
             return "Datos de la API almacenados correctamente.";
@@ -47,45 +60,45 @@ function obtener_datos_mindicador_api() {
 }
 
 //! Función para el shortcode que mostrará los indicadores según el parámetro recibido
-function mostrar_indicador($atts) {
+function iec_mostrar_indicador($iec_atributos) {
     if(extension_loaded('intl')){
         // Actualizar los datos de la API antes de mostrar el divisa solicitado
-        obtener_datos_mindicador_api();
+        iec_obtener_datos_mindicador_api();
         
-        global $indicadores_data;
-        $fmt = numfmt_create('es_CL', NumberFormatter::CURRENCY);
+        global $iec_indicadores_data;
+        $numberFormat = numnumberFormat_create('es_CL', NumberFormatter::CURRENCY);
         $value_temp;
 
         // Obtener el parámetro del shortcode
-        $atts = shortcode_atts(array(
+        $iec_atributos = shortcode_atributos(array(
             'divisa' => '',
             'nombre' => false,
             'class' => '',
             'id' => '',
-        ), $atts);
+        ), $iec_atributos);
 
         // Verificar si se proporcionó un divisa válido y existe en los datos almacenados
-        if (!empty($atts['divisa']) && isset($indicadores_data[$atts['divisa']])) {
+        if (!empty($iec_atributos['divisa']) && isset($iec_indicadores_data[$iec_atributos['divisa']])) {
             // Verificar si los datos de la API están disponibles y el valor no es nulo
-            if ($indicadores_data !== null) {
+            if ($iec_indicadores_data !== null) {
                 //Comprobamos valores con porcentaje
-                if($atts['divisa'] === 'ipc' || $atts['divisa'] === 'imacec' || $atts['divisa'] === 'tpm'){
-                    $converted_value = $indicadores_data[$atts['divisa']]->valor . '%';
+                if($iec_atributos['divisa'] === 'ipc' || $iec_atributos['divisa'] === 'imacec' || $iec_atributos['divisa'] === 'tpm'){
+                    $converted_value = $iec_indicadores_data[$iec_atributos['divisa']]->valor . '%';
                 }else{
-                    $value_temp = $indicadores_data[$atts['divisa']]->valor;
-                    $converted_value = numfmt_format_currency($fmt, $value_temp, 'CLP');
+                    $value_temp = $iec_indicadores_data[$iec_atributos['divisa']]->valor;
+                    $converted_value = numnumberFormat_format_currency($numberFormat, $value_temp, 'CLP');
                 }
                 // Construir el elemento del párrafo con clase y ID
                 $output = '<p';            
-                if (!empty($atts['class'])) {
-                    $output .= ' class="' . esc_attr($atts['class']) . '"';
+                if (!empty($iec_atributos['class'])) {
+                    $output .= ' class="' . esc_attr($iec_atributos['class']) . '"';
                 }
-                if (!empty($atts['id'])) {
-                    $output .= ' id="' . esc_attr($atts['id']) . '"';
+                if (!empty($iec_atributos['id'])) {
+                    $output .= ' id="' . esc_attr($iec_atributos['id']) . '"';
                 }
                 $output .= '>';
-                if($atts['nombre']){
-                    $output .= '<span><b>'.$indicadores_data[$atts['divisa']]->nombre.': '.'</b>'. $converted_value .'</span>';
+                if($iec_atributos['nombre']){
+                    $output .= '<span><b>'.$iec_indicadores_data[$iec_atributos['divisa']]->nombre.': '.'</b>'. $converted_value .'</span>';
                 }else{
                     $output .= $converted_value;
                 }
@@ -105,23 +118,20 @@ function mostrar_indicador($atts) {
     }
 }
 
-// Registrar el shortcode
-add_shortcode('indicadores', 'mostrar_indicador');
-
 // Función para añadir una página en Herramientas
-function agregar_pagina_herramientas() {
+function iec_agregar_pagina_herramientas() {
     add_submenu_page(
         'tools.php',             // Slug de la página padre (Herramientas)
         'Indicadores Económicos Chile',     // Título de la página
         'Indicadores Económicos Chile',     // Nombre en el menú
         'manage_options',        // Capacidad requerida para acceder
         'indicadores-económicos-chile-settings',   // Slug de la página
-        'indicadores_pagina'      // Función que mostrará la página
+        'iec_indicadores_pagina'      // Función que mostrará la página
     );
 }
 
 // Función que mostrará el contenido de la página
-function indicadores_pagina() {
+function iec_indicadores_pagina() {
     if (!extension_loaded('intl')) {
         echo '<h2>**Para poder usar el shortcode verifica que la extensión intl este activada.**</h2>';
     } 
@@ -138,7 +148,7 @@ function indicadores_pagina() {
     echo '</ul>';
     echo '<h2>¡Apoya mi trabajo!</h2>';
     echo '<p>Puedes apoyarme comprándome un café en <a href="https://ko-fi.com/mushroom47" target="_blank" rel="noopener noreferrer">Kofi</a>.</p>';
-    echo '<p><a href="https://hectorvaldesm.com/" target="_blank" rel="noopener noreferrer">Developed by Mushroom Dev 🍄</a></p>';
+    echo '<p><a href="https://hectorvaldes.dev/" target="_blank" rel="noopener noreferrer">Developed by Mushroom Dev 🍄</a></p>';
     
     // Disclaimer y versión del plugin
     echo '<p>Los datos son obtenidos diariamente de la API REST <a href="https://mindicador.cl/" target="_blank" rel="noopener noreferrer">mindicador.cl</a>.</p>';
@@ -147,5 +157,8 @@ function indicadores_pagina() {
     echo '</div>';
 }
 
+// Registrar el shortcode
+add_shortcode('indicadores', 'iec_mostrar_indicador');
+
 // Acción para añadir la página al menú de Herramientas
-add_action('admin_menu', 'agregar_pagina_herramientas');
+add_action('admin_menu', 'iec_agregar_pagina_herramientas');

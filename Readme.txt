@@ -3,18 +3,23 @@ Contributors:
 Donate link: hhttps://ko-fi.com/mushroom47
 Tags: indicadores, Chile, economía, uf, dolar, ipc
 Requires at least: 4.0
-Tested up to: 5.9
+Tested up to: 6.4
 Stable tag: 1.0.0
-License: GPL-2.0+
+License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Muestra mediante un shortcode los Indicadores económicos actualizados en Chile.
 
 == Description ==
 
-Este plugin permite mostrar en tu sitio web de WordPress los indicadores económicos actualizados de Chile a través de un shortcode fácil de usar. Podrás insertar estos indicadores en cualquier página o entrada con solo utilizar el shortcode correspondiente.
+Este plugin te permite mostrar en tu sitio web de WordPress los indicadores económicos actualizados de Chile a través de un shortcode fácil de usar. Podrás insertar estos indicadores en cualquier página o entrada con solo utilizar el shortcode correspondiente.
 
-Los indicadores que se pueden mostrar incluyen: uf, ivp, dolar, euro, ipc, imacec, tpm, dolar intercambio.
+Características:
+
+1. Muestra los indicadores económicos más relevantes de Chile: uf, ivp, dolar, euro, ipc, imacec, tpm, dolar intercambio.
+2. Personaliza la apariencia de los indicadores con los parámetros class e id.
+3. Accede a una página de configuración para actualizar manualmente los datos y ver información adicional.
+4. Obtén datos actualizados diariamente de la API REST de Mindicador.cl.
 
 == Installation ==
 
@@ -27,19 +32,32 @@ Los indicadores que se pueden mostrar incluyen: uf, ivp, dolar, euro, ipc, imace
 Para mostrar los indicadores económicos, utiliza el siguiente shortcode en tus páginas o entradas:
 [indicadores]
 
+Parámetros del shortcode:
+
+1. divisa: Opcional. Indica el indicador que deseas mostrar. Las opciones disponibles son: uf, ivp, dolar, euro, ipc, imacec, tpm, dolar intercambio.
+2. nombre: Opcional. Si se establece como true, muestra el nombre del indicador junto al valor.
+3. class: Opcional. Asigna una clase CSS para personalizar el estilo del indicador.
+4. id: Opcional. Asigna un ID único al elemento del indicador.
+
+Ejemplo:
+[indicadores divisa="dolar" nombre="true"]
+
 
 == Frequently Asked Questions ==
 
 = ¿Puedo personalizar la apariencia de los indicadores? =
-El shortcode acepta los parámetros `class` y `id` para personalizar los estilos de los indicadores en tu página. Por ejemplo, puedes asignar una clase CSS existente o un ID para aplicar estilos específicos a través de tu tema de WordPress.
+Sí, puedes personalizar la apariencia de los indicadores utilizando los parámetros class e id del shortcode.
 
 
 = ¿Cómo puedo mostrar un indicador específico? =
-Puedes utilizar parámetros en el shortcode para mostrar un indicador específico. Por ejemplo:
-[indicadores_chile divisa="tipo_de_cambio"]
+Para mostrar un indicador específico, utiliza el parámetro divisa del shortcode. Por ejemplo, para mostrar el valor del dólar, utiliza el siguiente shortcode:
+[indicadores_chile divisa="dolar"]
 
 Las divisas aceptadas son:
 uf, ivp, dolar, euro, ipc, imacec, tpm, dolar intercambio.
+
+= ¿De dónde se obtienen los datos?
+Los datos se obtienen de la API REST de Mindicador.cl, que ofrece información actualizada diariamente sobre los indicadores económicos de Chile.
 
 == Changelog ==
 
