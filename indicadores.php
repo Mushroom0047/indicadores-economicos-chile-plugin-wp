@@ -66,11 +66,11 @@ function iec_mostrar_indicador($iec_atributos) {
         iec_obtener_datos_mindicador_api();
         
         global $iec_indicadores_data;
-        $numberFormat = numnumberFormat_create('es_CL', NumberFormatter::CURRENCY);
+        $iec_numberFormat = NumberFormatter::create('es_CL', NumberFormatter::CURRENCY);
         $value_temp;
 
         // Obtener el parámetro del shortcode
-        $iec_atributos = shortcode_atributos(array(
+        $iec_atributos = shortcode_atts(array(
             'divisa' => '',
             'nombre' => false,
             'class' => '',
@@ -83,10 +83,10 @@ function iec_mostrar_indicador($iec_atributos) {
             if ($iec_indicadores_data !== null) {
                 //Comprobamos valores con porcentaje
                 if($iec_atributos['divisa'] === 'ipc' || $iec_atributos['divisa'] === 'imacec' || $iec_atributos['divisa'] === 'tpm'){
-                    $converted_value = $iec_indicadores_data[$iec_atributos['divisa']]->valor . '%';
+                    $iec_converted_value = $iec_indicadores_data[$iec_atributos['divisa']]->valor . '%';
                 }else{
                     $value_temp = $iec_indicadores_data[$iec_atributos['divisa']]->valor;
-                    $converted_value = numnumberFormat_format_currency($numberFormat, $value_temp, 'CLP');
+                    $iec_converted_value = $iec_numberFormat->formatCurrency($value_temp, 'CLP');
                 }
                 // Construir el elemento del párrafo con clase y ID
                 $output = '<p';            
@@ -98,9 +98,9 @@ function iec_mostrar_indicador($iec_atributos) {
                 }
                 $output .= '>';
                 if($iec_atributos['nombre']){
-                    $output .= '<span><b>'.$iec_indicadores_data[$iec_atributos['divisa']]->nombre.': '.'</b>'. $converted_value .'</span>';
+                    $output .= '<span><b>'.$iec_indicadores_data[$iec_atributos['divisa']]->nombre.': '.'</b>'. $iec_converted_value .'</span>';
                 }else{
-                    $output .= $converted_value;
+                    $output .= $iec_converted_value;
                 }
                 $output .= '</p>';
                 
