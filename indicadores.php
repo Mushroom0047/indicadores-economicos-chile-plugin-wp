@@ -17,39 +17,39 @@
 */
 if ( ! defined( 'ABSPATH' ) ) exit; // Salir si se accede directamente
 
-global $iec_indicadores_data;
+global $indecochile_indicadores_data;
 
 //! Función para obtener los datos de la API de mindicador.cl
-function iec_obtener_datos_mindicador_api() {
-    $iec_api_url = 'https://www.mindicador.cl/api';
+function indecochile_obtener_datos_mindicador_api() {
+    $indecochile_api_url = 'https://www.mindicador.cl/api';
 
     // Realizar la solicitud GET a la API
-    $iec_response = wp_remote_get($iec_api_url);
+    $indecochile_response = wp_remote_get($indecochile_api_url);
 
     // Verificar si la solicitud fue exitosa
-    if (is_wp_error($iec_response)) {
+    if (is_wp_error($indecochile_response)) {
         // En caso de error al hacer la solicitud, registrar el error en el log
-        error_log("Error al obtener datos de la API: " . $iec_response->get_error_message());
+        error_log("Error al obtener datos de la API: " . $indecochile_response->get_error_message());
         // Informar al usuario de manera más específica sobre el problema
         return "Error al obtener datos de la API. Por favor, inténtalo de nuevo más tarde.";
     } else {
         // Si la solicitud fue exitosa, obtener y decodificar los datos JSON
-        $iec_body = wp_remote_retrieve_body($iec_response);
-        $iec_data = json_decode($iec_body);
+        $indecochile_body = wp_remote_retrieve_body($indecochile_response);
+        $indecochile_data = json_decode($indecochile_body);
 
          // Verificar si se obtuvieron datos válidos
-         if ($iec_data) {
-            global $iec_indicadores_data;
+         if ($indecochile_data) {
+            global $indecochile_indicadores_data;
             // Almacenar los valores en las variables globales
-            $iec_indicadores_data = array(
-                'uf' => $iec_data->uf,
-                'ivp' => $iec_data->ivp,
-                'dolar' => $iec_data->dolar,
-                'dolar intercambio' => $iec_data->dolar_intercambio,
-                'euro' => $iec_data->euro,
-                'ipc' => $iec_data->ipc,
-                'imacec' => $iec_data->imacec,
-                'tpm' => $iec_data->tpm
+            $indecochile_indicadores_data = array(
+                'uf' => $indecochile_data->uf,
+                'ivp' => $indecochile_data->ivp,
+                'dolar' => $indecochile_data->dolar,
+                'dolar intercambio' => $indecochile_data->dolar_intercambio,
+                'euro' => $indecochile_data->euro,
+                'ipc' => $indecochile_data->ipc,
+                'imacec' => $indecochile_data->imacec,
+                'tpm' => $indecochile_data->tpm
             );
 
             return "Datos de la API almacenados correctamente.";
@@ -60,47 +60,47 @@ function iec_obtener_datos_mindicador_api() {
 }
 
 //! Función para el shortcode que mostrará los indicadores según el parámetro recibido
-function iec_mostrar_indicador($iec_atributos) {
+function indecochile_mostrar_indicador($indecochile_atributos) {
     if(extension_loaded('intl')){
         // Actualizar los datos de la API antes de mostrar el divisa solicitado
-        iec_obtener_datos_mindicador_api();
+        indecochile_obtener_datos_mindicador_api();
         
-        global $iec_indicadores_data;
-        $iec_numberFormat = NumberFormatter::create('es_CL', NumberFormatter::CURRENCY);
+        global $indecochile_indicadores_data;
+        $indecochile_numberFormat = NumberFormatter::create('es_CL', NumberFormatter::CURRENCY);
         $value_temp;
 
         // Obtener el parámetro del shortcode
-        $iec_atributos = shortcode_atts(array(
+        $indecochile_atributos = shortcode_atts(array(
             'divisa' => '',
             'nombre' => false,
             'class' => '',
             'id' => '',
-        ), $iec_atributos);
+        ), $indecochile_atributos);
 
         // Verificar si se proporcionó un divisa válido y existe en los datos almacenados
-        if (!empty($iec_atributos['divisa']) && isset($iec_indicadores_data[$iec_atributos['divisa']])) {
+        if (!empty($indecochile_atributos['divisa']) && isset($indecochile_indicadores_data[$indecochile_atributos['divisa']])) {
             // Verificar si los datos de la API están disponibles y el valor no es nulo
-            if ($iec_indicadores_data !== null) {
+            if ($indecochile_indicadores_data !== null) {
                 //Comprobamos valores con porcentaje
-                if($iec_atributos['divisa'] === 'ipc' || $iec_atributos['divisa'] === 'imacec' || $iec_atributos['divisa'] === 'tpm'){
-                    $iec_converted_value = $iec_indicadores_data[$iec_atributos['divisa']]->valor . '%';
+                if($indecochile_atributos['divisa'] === 'ipc' || $indecochile_atributos['divisa'] === 'imacec' || $indecochile_atributos['divisa'] === 'tpm'){
+                    $indecochile_converted_value = $indecochile_indicadores_data[$indecochile_atributos['divisa']]->valor . '%';
                 }else{
-                    $value_temp = $iec_indicadores_data[$iec_atributos['divisa']]->valor;
-                    $iec_converted_value = $iec_numberFormat->formatCurrency($value_temp, 'CLP');
+                    $value_temp = $indecochile_indicadores_data[$indecochile_atributos['divisa']]->valor;
+                    $indecochile_converted_value = $indecochile_numberFormat->formatCurrency($value_temp, 'CLP');
                 }
                 // Construir el elemento del párrafo con clase y ID
                 $output = '<p';            
-                if (!empty($iec_atributos['class'])) {
-                    $output .= ' class="' . esc_attr($iec_atributos['class']) . '"';
+                if (!empty($indecochile_atributos['class'])) {
+                    $output .= ' class="' . esc_attr($indecochile_atributos['class']) . '"';
                 }
-                if (!empty($iec_atributos['id'])) {
-                    $output .= ' id="' . esc_attr($iec_atributos['id']) . '"';
+                if (!empty($indecochile_atributos['id'])) {
+                    $output .= ' id="' . esc_attr($indecochile_atributos['id']) . '"';
                 }
                 $output .= '>';
-                if($iec_atributos['nombre']){
-                    $output .= '<span><b>'.$iec_indicadores_data[$iec_atributos['divisa']]->nombre.': '.'</b>'. $iec_converted_value .'</span>';
+                if($indecochile_atributos['nombre']){
+                    $output .= '<span><b>'.$indecochile_indicadores_data[$indecochile_atributos['divisa']]->nombre.': '.'</b>'. $indecochile_converted_value .'</span>';
                 }else{
-                    $output .= $iec_converted_value;
+                    $output .= $indecochile_converted_value;
                 }
                 $output .= '</p>';
                 
@@ -119,19 +119,19 @@ function iec_mostrar_indicador($iec_atributos) {
 }
 
 // Función para añadir una página en Herramientas
-function iec_agregar_pagina_herramientas() {
+function indecochile_agregar_pagina_herramientas() {
     add_submenu_page(
         'tools.php',             // Slug de la página padre (Herramientas)
         'Indicadores Económicos Chile',     // Título de la página
         'Indicadores Económicos Chile',     // Nombre en el menú
         'manage_options',        // Capacidad requerida para acceder
         'indicadores-económicos-chile-settings',   // Slug de la página
-        'iec_indicadores_pagina'      // Función que mostrará la página
+        'indecochile_indicadores_pagina'      // Función que mostrará la página
     );
 }
 
 // Función que mostrará el contenido de la página
-function iec_indicadores_pagina() {
+function indecochile_indicadores_pagina() {
     if (!extension_loaded('intl')) {
         echo '<h2>**Para poder usar el shortcode verifica que la extensión intl este activada.**</h2>';
     } 
@@ -158,7 +158,7 @@ function iec_indicadores_pagina() {
 }
 
 // Registrar el shortcode
-add_shortcode('indicadores', 'iec_mostrar_indicador');
+add_shortcode('indicadores', 'indecochile_mostrar_indicador');
 
 // Acción para añadir la página al menú de Herramientas
-add_action('admin_menu', 'iec_agregar_pagina_herramientas');
+add_action('admin_menu', 'indecochile_agregar_pagina_herramientas');
