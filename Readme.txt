@@ -1,7 +1,7 @@
 === Indicadores Económicos Chile ===
 Contributors:
 Donate link: hhttps://ko-fi.com/mushroom47
-Tags: indicadores, Chile, economía, uf, dolar, ipc
+Tags: indicadores, Chile, Economía, UF, Dolar, IPC, Euro, UTM,  Finanzas, Mercado, Tasas de interés, Moneda extranjera, Estadísticas económicas, Política económica, Inflación, Tipo de cambio, Crecimiento económico, Variables económicas, Política monetaria, Análisis financiero, Índice de precios
 Requires at least: 4.0
 Tested up to: 6.4
 Stable tag: 1.0.0
@@ -62,17 +62,17 @@ Los datos se obtienen de la API REST de Mindicador.cl, que ofrece información a
 == Changelog ==
 
 = 1.0.0 =
-* Versión inicial del plugin.
+*Release Date - 17 January 2024*
+
+*Plugin "Indicadores Económicos Chile"! ¡Disfruta de los indicadores económicos actualizados en tu sitio web!
 
 == Upgrade Notice ==
 
-= 1.0.0 =
-¡Nueva versión del plugin "Indicadores Económicos Chile"! ¡Disfruta de los indicadores económicos actualizados en tu sitio web!
 
 == Screenshots ==
 
-![Página de detalles del plugin, ubicada en Herramientas>Indicadores](screenshots/screenshot_plugin_ind_eco_chile(1).png)
-![Ejemplo de Shortcode usando Gutenberg](screenshots/screenshot_plugin_ind_eco_chile(2).png)
+![Página de detalles del plugin, ubicada en Herramientas>Indicadores](assets/screenshot_plugin_ind_eco_chile(1).png)
+![Ejemplo de Shortcode usando Gutenberg](assets/screenshot_plugin_ind_eco_chile(2).png)
 ![Vista de cómo quedaría en el sitio los indicadores](screenshots/screenshot_plugin_ind_eco_chile(3).png)
 
 
