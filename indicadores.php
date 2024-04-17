@@ -3,14 +3,14 @@
 *Plugin Name: Indicadores Económicos Chile
 *Plugin URI: https://github.com/Mushroom0047/indicadores-economicos-chile-plugin-wp
 *Description: Muestra mediante un shortcode los Indicadores económicos actualizados en Chile.
-*Version: 1.0.0
+*Version: 1.1.0
 *Author: Mushroom Dev 🍄
 *Author URI: https://hectorvaldes.dev/
 *Donate link: https://ko-fi.com/mushroom47
 *Tags: indicadores, Chile, economía, uf, dolar, ipc
 *Requires at least: 4.0
-*Tested up to: 6.4
-*Stable tag: 1.0.0
+*Tested up to: 6.5
+*Stable tag: 1.1.0
 *License: GPLv2
 *License URI: https://www.gnu.org/licenses/gpl-2.0.html
 *Text Domain: indicadores-economicos-chile
@@ -48,8 +48,10 @@ function indecochile_obtener_datos_mindicador_api() {
                 'dolar intercambio' => $indecochile_data->dolar_intercambio,
                 'euro' => $indecochile_data->euro,
                 'ipc' => $indecochile_data->ipc,
+                'utm' => $indecochile_data->utm,
                 'imacec' => $indecochile_data->imacec,
-                'tpm' => $indecochile_data->tpm
+                'tpm' => $indecochile_data->tpm,
+                'bitcoin' => $indecochile_data->bitcoin,
             );
 
             return "Datos de la API almacenados correctamente.";
@@ -67,6 +69,7 @@ function indecochile_mostrar_indicador($indecochile_atributos) {
         
         global $indecochile_indicadores_data;
         $indecochile_numberFormat = NumberFormatter::create('es_CL', NumberFormatter::CURRENCY);
+        $indecochile_numberFormatUSD = NumberFormatter::create('en_US', NumberFormatter::CURRENCY);
         $value_temp;
 
         // Obtener el parámetro del shortcode
@@ -84,6 +87,9 @@ function indecochile_mostrar_indicador($indecochile_atributos) {
                 //Comprobamos valores con porcentaje
                 if($indecochile_atributos['divisa'] === 'ipc' || $indecochile_atributos['divisa'] === 'imacec' || $indecochile_atributos['divisa'] === 'tpm'){
                     $indecochile_converted_value = $indecochile_indicadores_data[$indecochile_atributos['divisa']]->valor . '%';
+                }else if($indecochile_atributos['divisa'] === 'bitcoin'){
+                    $value_temp = $indecochile_indicadores_data[$indecochile_atributos['divisa']]->valor;
+                    $indecochile_converted_value = $indecochile_numberFormatUSD->formatCurrency($value_temp, 'USD');
                 }else{
                     $value_temp = $indecochile_indicadores_data[$indecochile_atributos['divisa']]->valor;
                     $indecochile_converted_value = $indecochile_numberFormat->formatCurrency($value_temp, 'CLP');
@@ -111,10 +117,10 @@ function indecochile_mostrar_indicador($indecochile_atributos) {
                 return "No se pudo obtener datos de la API.";
             }
         } else {
-            return "divisa no válido o no encontrado.";
+            return "divisa no válida o no encontrada.";
         }
     }else{
-        return "Para poder usar el shortcode verifica que la extensión intl este activada.";
+        return "Para poder usar el shortcode verifica que la extensión intl de PHP este activada.";
     }
 }
 
@@ -135,26 +141,39 @@ function indecochile_indicadores_pagina() {
     if (!extension_loaded('intl')) {
         echo '<h2>**Para poder usar el shortcode verifica que la extensión intl este activada.**</h2>';
     } 
-    echo '<div class="wrap">';
-    echo '<h1>Indicadores Económicos Chile</h1>';
-    echo '<p>Este plugin te permite obtener fácilmente mediante shortcode los indicadores económicos más utilizados en Chile.</p>';
-    echo '<h2>Instrucciones de uso del shortcode <b></b>[indicadores]</b></h2>';
-    echo '<p>El shortcode [indicadores] acepta los siguientes parámetros:</p>';
-    echo '<ul>';
-    echo '<li><strong>divisa</strong>: Parámetro para indicar la divisa a mostrar. Los valores aceptados son: uf, ivp, dolar, euro, ipc, imacec, tpm, dolar intercambio.</li>';
-    echo '<li><strong>nombre</strong>: Opcional. Si es true, mostrará el nombre de la divisa junto con su valor. Se agrega una etiqueta span que contiene el nombre de la divisa.</li>';
-    echo '<li><strong>class</strong>: Opcional. Define una clase CSS para el elemento generado por el shortcode.</li>';
-    echo '<li><strong>id</strong>: Opcional. Define un identificador único para el elemento generado por el shortcode.</li>';
-    echo '</ul>';
-    echo '<h2>¡Apoya mi trabajo!</h2>';
-    echo '<p>Puedes apoyarme comprándome un café en <a href="https://ko-fi.com/mushroom47" target="_blank" rel="noopener noreferrer">Kofi</a>.</p>';
-    echo '<p><a href="https://hectorvaldes.dev/" target="_blank" rel="noopener noreferrer">Developed by Mushroom Dev 🍄</a></p>';
+    echo <<<HTML
+<div class="wrap">
+    <h1>Indicadores Económicos Chile</h1>
+    <p>Este plugin te permite obtener fácilmente mediante shortcode los indicadores económicos más utilizados en Chile.</p>
+    <h2>Instrucciones de uso del shortcode <b>[indicadores]</b></h2>
+    <p>El shortcode <b>[indicadores]</b> acepta los siguientes parámetros:</p>
+    <ul style="list-style: inside;">
+        <li><strong>divisa</strong>: Parámetro para indicar la divisa a mostrar. Los valores aceptados son:</li>
+        <ul style="list-style: square; padding-left: 40px;">
+            <li>uf</li>
+            <li>dolar</li>
+            <li>dolar intercambio</li>
+            <li>euro</li>
+            <li>ipc</li>
+            <li>utm</li>
+            <li>ivp</li>
+            <li>imacec</li>
+            <li>tpm</li>
+            <li>bitcoin</li>
+        </ul>
+        <li><strong>nombre</strong>: Opcional. debe ser igual a "true" para mostrar el nombre de la divisa junto con su valor. Se agrega una etiqueta span que contiene el nombre de la divisa.</li>
+        <li><strong>class</strong>: Opcional. Define una clase CSS para el elemento generado por el shortcode.</li>
+        <li><strong>id</strong>: Opcional. Define un identificador único para el elemento generado por el shortcode.</li>
+    </ul>
+    <h2>¡Apoya mi trabajo!</h2>
+    <p>Puedes apoyarme comprándome un café en <a href="https://ko-fi.com/mushroom47" target="_blank" rel="noopener noreferrer">Kofi</a>.</p>
+    <p><a href="https://hectorvaldes.dev/" target="_blank" rel="noopener noreferrer">Developed by Mushroom Dev 🍄</a></p>
     
-    // Disclaimer y versión del plugin
-    echo '<p>Los datos son obtenidos diariamente de la API REST <a href="https://mindicador.cl/" target="_blank" rel="noopener noreferrer">mindicador.cl</a>.</p>';
-    echo '<p>Versión del plugin: 1.0.0</p>';
-    
-    echo '</div>';
+    <!-- Disclaimer y versión del plugin -->
+    <p>Los datos son obtenidos diariamente de la API REST <a href="https://mindicador.cl/" target="_blank" rel="noopener noreferrer">mindicador.cl</a>.</p>
+    <p>Versión del plugin: 1.1.0</p>
+</div>
+HTML;
 }
 
 // Registrar el shortcode
