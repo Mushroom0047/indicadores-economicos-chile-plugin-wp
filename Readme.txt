@@ -3,7 +3,7 @@ Contributors:
 Donate link: hhttps://ko-fi.com/mushroom47
 Tags: indicadores, Chile, Economía, UF, Dolar
 Requires at least: 4.0
-Tested up to: 6.4
+Tested up to: 6.5.2
 Stable tag: 1.1.0
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
