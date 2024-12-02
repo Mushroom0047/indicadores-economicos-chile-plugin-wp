@@ -2,57 +2,77 @@
 if (!defined('ABSPATH')) exit;
 
 function indecochile_mostrar_indicador($indecochile_atributos) {
-    if (extension_loaded('intl')) {
-        indecochile_obtener_datos_mindicador_api();
-        
-        global $indecochile_indicadores_data;
-        $indecochile_numberFormat = NumberFormatter::create('es_CL', NumberFormatter::CURRENCY);
-        $indecochile_numberFormatUSD = NumberFormatter::create('en_US', NumberFormatter::CURRENCY);
-        $value_temp;
+    // Llamar al método estático para obtener los datos de la API
+    IndecoChile_API::obtener_datos_mindicador_api();
+    
+    global $indecochile_indicadores_data;
 
-        $indecochile_atributos = shortcode_atts(array(
-            'divisa' => '',
-            'nombre' => false,
-            'class' => '',
-            'id' => '',
-        ), $indecochile_atributos);
+    // Configurar atributos con valores por defecto
+    $indecochile_atributos = shortcode_atts(array(
+        'divisa' => '',
+        'nombre' => false,
+        'class' => '',
+        'id' => '',
+        'separacion' => ' ', // Caracter de separación por defecto
+    ), $indecochile_atributos);
 
-        if (!empty($indecochile_atributos['divisa']) && isset($indecochile_indicadores_data[$indecochile_atributos['divisa']])) {
-            if ($indecochile_indicadores_data !== null) {
-                if ($indecochile_atributos['divisa'] === 'ipc' || $indecochile_atributos['divisa'] === 'imacec' || $indecochile_atributos['divisa'] === 'tpm') {
-                    $indecochile_converted_value = $indecochile_indicadores_data[$indecochile_atributos['divisa']]->valor . '%';
-                } else if ($indecochile_atributos['divisa'] === 'bitcoin') {
-                    $value_temp = $indecochile_indicadores_data[$indecochile_atributos['divisa']]->valor;
-                    $indecochile_converted_value = $indecochile_numberFormatUSD->formatCurrency($value_temp, 'USD');
-                } else {
-                    $value_temp = $indecochile_indicadores_data[$indecochile_atributos['divisa']]->valor;
-                    $indecochile_converted_value = $indecochile_numberFormat->formatCurrency($value_temp, 'CLP');
-                }
+    // Procesar las divisas en una lista
+    $divisas = array_map('trim', explode(',', $indecochile_atributos['divisa']));
 
-                $output = '<p';            
-                if (!empty($indecochile_atributos['class'])) {
-                    $output .= ' class="' . esc_attr($indecochile_atributos['class']) . '"';
-                }
-                if (!empty($indecochile_atributos['id'])) {
-                    $output .= ' id="' . esc_attr($indecochile_atributos['id']) . '"';
-                }
-                $output .= '>';
-                if ($indecochile_atributos['nombre']) {
-                    $output .= '<span><b>'.$indecochile_indicadores_data[$indecochile_atributos['divisa']]->nombre.': '.'</b>'. $indecochile_converted_value .'</span>';
-                } else {
-                    $output .= $indecochile_converted_value;
-                }
-                $output .= '</p>';
-
-                return $output;
-            } else {
-                return "No se pudo obtener datos de la API.";
-            }
-        } else {
-            return "divisa no válida o no encontrada.";
-        }
+    // Definir el separador
+    $separacion = trim($indecochile_atributos['separacion']);
+    if ($separacion === '') {
+        $separacion = ' '; // Separador por defecto: espacio
+    } elseif ($separacion === 'br') {
+        $separacion = '<br>'; // Separador como salto de línea
     } else {
-        return "Para poder usar el shortcode verifica que la extensión intl de PHP este activada.";
+        $separacion = ' ' . esc_html($separacion) . ' '; // Separador personalizado con espacio antes y después
     }
+
+    $valores = array();
+
+    foreach ($divisas as $divisa) {
+        if (isset($indecochile_indicadores_data[$divisa])) {
+            $indicador = $indecochile_indicadores_data[$divisa];
+            $nombre = $indecochile_atributos['nombre'] 
+                ? "<b>" . (isset($indicador->nombre) ? $indicador->nombre : ucfirst($divisa)) . "</b>: " 
+                : '';
+
+            // Formatear el valor dependiendo del tipo de divisa
+            if (in_array($divisa, ['ipc', 'imacec', 'tpm'])) {
+                $valor_formateado = $indicador->valor . '%';
+            } elseif ($divisa === 'bitcoin') {
+                $valor_formateado = formatearPeso($indicador->valor, 'USD$', 2);
+            } else {
+                $valor_formateado = formatearPeso($indicador->valor);
+            }
+
+            $valores[] = $nombre . $valor_formateado;
+        }
+    }
+
+    // Unir los valores con el carácter de separación
+    if (empty($valores)) {
+        return '<p>No se encontraron divisas válidas.</p>';
+    }
+
+    $resultado = implode($separacion, $valores);
+
+    // Generar el HTML de salida
+    $output = '<p';
+    if (!empty($indecochile_atributos['class'])) {
+        $output .= ' class="' . esc_attr($indecochile_atributos['class']) . '"';
+    }
+    if (!empty($indecochile_atributos['id'])) {
+        $output .= ' id="' . esc_attr($indecochile_atributos['id']) . '"';
+    }
+    $output .= '>' . $resultado . '</p>';
+
+    return $output;
+}
+
+function formatearPeso($valor, $moneda = 'CLP$', $decimales = 0) {
+    $valorFormateado = number_format($valor, $decimales, ',', '.');
+    return $moneda . ' ' . $valorFormateado;
 }
 ?>
