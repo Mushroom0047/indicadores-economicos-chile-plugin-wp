@@ -3,8 +3,8 @@ Contributors:
 Donate link: hhttps://ko-fi.com/mushroom47
 Tags: indicadores, Chile, Economía, UF, Dólar, Bitcoin
 Requires at least: 4.0
-Tested up to: 6.7.1
-Stable tag: 1.2.0
+Tested up to: 6.8
+Stable tag: 1.2.1
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -81,6 +81,8 @@ Se agregan las divisas UTM y BITCOIN.
 
 
 == Upgrade Notice ==
+= 1.2.1 =
+Compatibilidad confirmada con WordPress 6.8.
 
 
 == Other Notes ==

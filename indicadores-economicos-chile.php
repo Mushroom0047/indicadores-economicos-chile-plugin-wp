@@ -3,14 +3,14 @@
 Plugin Name: Indicadores Económicos Chile
 Plugin URI: https://github.com/Mushroom0047/indicadores-economicos-chile-plugin-wp
 Description: Muestra mediante un shortcode los Indicadores económicos actualizados en Chile.
-Version: 1.2.0
+Version: 1.2.1
 Author: Mushroom Dev 🍄
 Author URI: https://hectorvaldes.dev/
 Donate link: https://ko-fi.com/mushroom47
 Tags: indicadores, Chile, economía, uf, dólar, ipc
 Requires at least: 4.0
-Tested up to: 6.7.1
-Stable tag: 1.2.0
+Tested up to: 6.8
+Stable tag: 1.2.1
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: indicadores-economicos-chile
